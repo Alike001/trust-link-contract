@@ -186,14 +186,6 @@
                           },
                           {
                             "key": {
-                              "symbol": "paused"
-                            },
-                            "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
                               "symbol": "platform_fee_bps"
                             },
                             "val": {
@@ -210,26 +202,10 @@
                           },
                           {
                             "key": {
-                              "symbol": "recovery_mode"
+                              "symbol": "state_flags"
                             },
                             "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
-                              "symbol": "resolver_strict"
-                            },
-                            "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
-                              "symbol": "token_allowlist_enabled"
-                            },
-                            "val": {
-                              "bool": false
+                              "u32": 0
                             }
                           },
                           {

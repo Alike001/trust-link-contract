@@ -44,7 +44,6 @@ fn new_admin_can_call_admin_functions_after_rotation() {
     // `require_admin` resolves to the *new* admin and its auth is mocked.
     client.set_protocol_fee(&new_admin, &50_u32);
 
-    use crate::DataKey;
     let fee_config: crate::FeeConfig = env
         .as_contract(&client.address, || {
             Some(crate::storage::read_fee_config(&env))

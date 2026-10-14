@@ -19,7 +19,7 @@ fn setup(env: &Env) -> (Address, Address, Address, Address, Address, Address) {
 fn init_client(
     env: &Env,
 ) -> (
-    EscrowClient,
+    EscrowClient<'_>,
     Address,
     Address,
     Address,

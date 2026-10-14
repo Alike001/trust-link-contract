@@ -576,7 +576,8 @@ const HISTORY_TIMESTAMP_BITS: u32 = 56;
 const HISTORY_TIMESTAMP_MASK: u64 = (1u64 << HISTORY_TIMESTAMP_BITS) - 1;
 
 fn pack_history_entry(state: &EscrowState, timestamp: u64) -> u64 {
-    ((state.to_history_code() as u64) << HISTORY_TIMESTAMP_BITS) | (timestamp & HISTORY_TIMESTAMP_MASK)
+    (u64::from(state.to_history_code()) << HISTORY_TIMESTAMP_BITS)
+        | (timestamp & HISTORY_TIMESTAMP_MASK)
 }
 
 fn unpack_history_entry(packed: u64) -> (EscrowState, u64) {
@@ -1184,6 +1185,7 @@ pub(crate) fn write_recovery_mode(env: &Env, enabled: bool) {
 }
 
 #[allow(clippy::too_many_arguments)]
+#[allow(clippy::too_many_lines)]
 pub(crate) fn create_escrow_internal(
     env: &Env,
     payees: BoundedPayees,

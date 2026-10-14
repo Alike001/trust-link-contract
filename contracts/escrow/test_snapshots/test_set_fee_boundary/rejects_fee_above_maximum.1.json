@@ -29,6 +29,8 @@
         }
       ]
     ],
+    [],
+    [],
     []
   ],
   "ledger": {
@@ -160,14 +162,6 @@
                           },
                           {
                             "key": {
-                              "symbol": "paused"
-                            },
-                            "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
                               "symbol": "platform_fee_bps"
                             },
                             "val": {
@@ -179,31 +173,15 @@
                               "symbol": "protocol_fee_bps"
                             },
                             "val": {
+                              "u32": 500
+                            }
+                          },
+                          {
+                            "key": {
+                              "symbol": "state_flags"
+                            },
+                            "val": {
                               "u32": 0
-                            }
-                          },
-                          {
-                            "key": {
-                              "symbol": "recovery_mode"
-                            },
-                            "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
-                              "symbol": "resolver_strict"
-                            },
-                            "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
-                              "symbol": "token_allowlist_enabled"
-                            },
-                            "val": {
-                              "bool": false
                             }
                           },
                           {
@@ -221,18 +199,6 @@
                             }
                           }
                         ]
-                      }
-                    },
-                    {
-                      "key": {
-                        "vec": [
-                          {
-                            "symbol": "PlatformFeeBps"
-                          }
-                        ]
-                      },
-                      "val": {
-                        "u32": 500
                       }
                     },
                     {

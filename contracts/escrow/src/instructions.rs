@@ -305,6 +305,13 @@ impl Escrow {
 
         let now = env.ledger().timestamp();
 
+        // Fail fast if the dispute deadline is unrepresentable: funding must
+        // record `funded_at + DISPUTE_WINDOW`, so an overflow here is fatal
+        // regardless of expiry state (see
+        // test_dispute_deadline_overflow).
+        now.checked_add(DISPUTE_WINDOW)
+            .ok_or(ContractError::ArithmeticOverflow)?;
+
         if let Some(schedule) = env
             .storage()
             .persistent()
@@ -1488,17 +1495,17 @@ impl Escrow {
     ///
     /// | Basket size (tokens) | Transfers | CPU instructions (approx.) | Instructions per token |
     /// |----------------------|-----------|----------------------------|------------------------|
-    /// | 1                    | 1         | 1_450_000                  | 1_450_000              |
-    /// | 2                    | 2         | 1_780_000                  | 890_000                |
-    /// | 3                    | 3         | 2_110_000                  | 703_333                |
-    /// | 4                    | 4         | 2_440_000                  | 610_000                |
-    /// | 5                    | 5         | 2_770_000                  | 554_000                |
+    /// | 1                    | 1         | `1_450_000`                  | `1_450_000`              |
+    /// | 2                    | 2         | `1_780_000`                  | `890_000`                |
+    /// | 3                    | 3         | `2_110_000`                  | `703_333`                |
+    /// | 4                    | 4         | `2_440_000`                  | `610_000`                |
+    /// | 5                    | 5         | `2_770_000`                  | `554_000`                |
     ///
     /// The fixed overhead (auth, escrow load, expiry checks, role-separation
     /// checks, state save, index append, event emission) is roughly
-    /// 1_120_000 instructions; each additional token transfer adds roughly
-    /// 330_000 instructions. The per-token marginal cost is therefore
-    /// ~330_000 instructions, and the amortized per-token cost decreases as
+    /// `1_120_000` instructions; each additional token transfer adds roughly
+    /// `330_000` instructions. The per-token marginal cost is therefore
+    /// `~330_000` instructions, and the amortized per-token cost decreases as
     /// the basket grows.
     ///
     /// Notes for integrators:
@@ -1512,7 +1519,7 @@ impl Escrow {
     ///   contract, as instruction costs are protocol-version dependent.
     ///
     /// # Errors
-    /// Reverts with `EscrowExpired` if the PendingExpiry schedule or the
+    /// Reverts with `EscrowExpired` if the `PendingExpiry` schedule or the
     /// blanket `PENDING_EXPIRY_WINDOW` has elapsed, `ConflictingRoles` if the
     /// buyer matches a payee or resolver, `NotAuthorizedBuyer` if a designated
     /// buyer does not match, and `BasketTokenMismatch` if no basket tokens are
@@ -1852,18 +1859,17 @@ impl Escrow {
 
         let mut seen_notes: Vec<String> = Vec::new(&env);
         for input in escrows.iter() {
-            if let Some(ref notes) = input.notes {
-                if !notes.is_empty() {
-                    for i in 0..seen_notes.len() {
-                        if let Some(existing) = seen_notes.get(i) {
-                            if existing == *notes {
-                                return Err(ContractError::DuplicateNotes);
-                            }
-                        }
+            if input.notes.is_empty() {
+                continue;
+            }
+            for i in 0..seen_notes.len() {
+                if let Some(existing) = seen_notes.get(i) {
+                    if existing == input.notes {
+                        return Err(ContractError::DuplicateNotes);
                     }
-                    seen_notes.push_back(notes.clone());
                 }
             }
+            seen_notes.push_back(input.notes.clone());
         }
 
         let mut escrow_ids = Vec::new(&env);

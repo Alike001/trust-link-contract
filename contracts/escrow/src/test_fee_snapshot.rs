@@ -8,7 +8,8 @@ mod tests {
 
     const DISPUTE_WINDOW: u64 = 172_800;
 
-    fn setup_contract(env: &Env) -> (EscrowClient, Address, Address) {
+    #[allow(dead_code)]
+    fn setup_contract(env: &Env) -> (EscrowClient<'_>, Address, Address) {
         let admin = Address::generate(env);
         let fee_collector = Address::generate(env);
 

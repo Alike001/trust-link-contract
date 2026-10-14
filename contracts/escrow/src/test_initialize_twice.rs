@@ -5,7 +5,7 @@
 use crate::{DataKey, Escrow, EscrowClient};
 use soroban_sdk::{testutils::Address as _, Address, Env};
 
-fn deploy_and_init(env: &Env) -> (EscrowClient, Address, Address) {
+fn deploy_and_init(env: &Env) -> (EscrowClient<'_>, Address, Address) {
     env.mock_all_auths();
     let admin_a = Address::generate(env);
     let fee_collector_a = Address::generate(env);

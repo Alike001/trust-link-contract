@@ -42,7 +42,7 @@ fn set_fee_collector_stores_pending_address() {
     // Active fee collector must NOT have changed yet.
     let active: Address = env
         .as_contract(&client.address, || {
-            env.storage().instance().get(&DataKey::FeeCollector)
+            crate::storage::read_global_config(&env).fee_collector
         })
         .expect("active fee collector set");
     assert_eq!(

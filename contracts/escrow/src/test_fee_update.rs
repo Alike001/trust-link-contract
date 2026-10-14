@@ -1,7 +1,7 @@
 #![cfg(test)]
 
 use crate::internal::validate_combined_fees;
-use crate::{test_helpers::setup_contract, ContractError, DataKey, FeeConfig, ProtocolFeeUpdated};
+use crate::{test_helpers::setup_contract, ContractError, FeeConfig, ProtocolFeeUpdated};
 use soroban_sdk::{
     testutils::{Address as _, Events as _},
     Address, Env, IntoVal, Symbol, TryFromVal, Val,

@@ -353,11 +353,11 @@ pub struct DisputeData {
     pub disputed_at: u64,
     pub tracking_id: Option<String>,
     /// Resolution code: 0 = not resolved, 1 = Release, 2 = Refund
-    pub resolution: u8,
+    pub resolution: u32,
     /// Which address made the resolution (the resolver who triggered finalization)
     pub resolved_by: Option<Address>,
     /// Number of times this dispute has been appealed
-    pub appeal_count: u8,
+    pub appeal_count: u32,
     /// Timestamp when the resolution was made
     pub resolved_at: u64,
     /// Arbitration fee deducted when the resolution transition executed
@@ -452,7 +452,7 @@ pub struct GlobalConfig {
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct PublicContractConfig {
-    pub fee_bps: u16,
+    pub fee_bps: u32,
     pub arbitration_fee_bps: u32,
     pub paused: bool,
     pub escrow_count: u64,
@@ -463,7 +463,7 @@ pub struct PublicContractConfig {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct ContractConfig {
     pub admin: Address,
-    pub fee_bps: u16,
+    pub fee_bps: u32,
     pub arbitration_fee_bps: u32,
     pub fee_collector: Address,
     pub escrow_count: u64,
@@ -477,7 +477,7 @@ pub struct Escrow {
     pub resolvers: ResolverSet,
     pub token: Address,
     pub amount: i128,
-    pub fee_bps: u16,
+    pub fee_bps: u32,
     pub resolver_fee_bps: u32,
     pub shipping_window: u64,
     /// Packed timestamp field: high 32 bits = `funded_at`, low 32 bits = `dispute_deadline`.
@@ -519,7 +519,7 @@ pub struct EscrowInput {
     pub resolver: Address,
     pub token: Address,
     pub amount: i128,
-    pub fee_bps: u16,
+    pub fee_bps: u32,
     /// Per-escrow resolver fee in basis points (issue #911). Validated with
     /// the same cap as `create_escrow`'s `resolver_fee_bps`; `0` means the
     /// resolver serves uncompensated.
@@ -666,6 +666,8 @@ pub enum TimelockOperation {
     UnpauseContract = 17,
     SetMaxAppeals = 18,
     SetMaxBasketSize = 19,
+    SetAppealFee = 20,
+    SetTimelockDelay = 21,
 }
 
 impl TimelockOperation {
@@ -688,8 +690,10 @@ impl TimelockOperation {
             15 => Some(Self::RemoveAllowedToken),
             16 => Some(Self::PauseContract),
             17 => Some(Self::UnpauseContract),
-            18 => Some(Self::SetAppealFee),
-            19 => Some(Self::SetTimelockDelay),
+            18 => Some(Self::SetMaxAppeals),
+            19 => Some(Self::SetMaxBasketSize),
+            20 => Some(Self::SetAppealFee),
+            21 => Some(Self::SetTimelockDelay),
             _ => None,
         }
     }

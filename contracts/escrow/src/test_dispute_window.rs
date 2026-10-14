@@ -8,7 +8,7 @@ use crate::{
 };
 use soroban_sdk::{
     testutils::{Address as _, Ledger as _},
-    token, Address, BytesN, Env, IntoVal, String, Symbol, Vec,
+    token, Address, BytesN, Env, IntoVal, Symbol, Vec,
 };
 
 struct Fx {

@@ -20,6 +20,7 @@ struct Fixture {
     contract_id: Address,
     client: crate::EscrowClient<'static>,
     mclient: MaliciousTokenClient<'static>,
+    #[allow(dead_code)]
     admin: Address,
     seller: Address,
     buyer: Address,
@@ -84,6 +85,7 @@ fn setup() -> Fixture {
 
 /// Funds a created escrow (leaving it `Funded`, not yet shipped) with the
 /// attack disabled.
+#[allow(dead_code)]
 fn fund_only(f: &Fixture) {
     f.mclient.set_attack(&Attack::None);
     f.client.fund_escrow(&f.id, &f.buyer);

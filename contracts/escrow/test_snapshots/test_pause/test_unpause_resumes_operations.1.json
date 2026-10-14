@@ -509,7 +509,7 @@
               "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
               "key": {
                 "ledger_key_nonce": {
-                  "nonce": "7270604957039011794"
+                  "nonce": "6517132746326325848"
                 }
               },
               "durability": "temporary",
@@ -529,7 +529,7 @@
               "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4",
               "key": {
                 "ledger_key_nonce": {
-                  "nonce": "2307661404550649928"
+                  "nonce": "2781962168096793370"
                 }
               },
               "durability": "temporary",
@@ -629,7 +629,7 @@
               "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAK3IM",
               "key": {
                 "ledger_key_nonce": {
-                  "nonce": "2781962168096793370"
+                  "nonce": "7270604957039011794"
                 }
               },
               "durability": "temporary",
@@ -1311,32 +1311,10 @@
               "val": {
                 "vec": [
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "0"
                   },
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Funded"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "72057594037927936"
                   }
                 ]
               }
@@ -1367,18 +1345,7 @@
               "val": {
                 "vec": [
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "0"
                   }
                 ]
               }
@@ -1409,18 +1376,7 @@
               "val": {
                 "vec": [
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "0"
                   }
                 ]
               }
@@ -1686,14 +1642,6 @@
                           },
                           {
                             "key": {
-                              "symbol": "paused"
-                            },
-                            "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
                               "symbol": "platform_fee_bps"
                             },
                             "val": {
@@ -1710,26 +1658,10 @@
                           },
                           {
                             "key": {
-                              "symbol": "recovery_mode"
+                              "symbol": "state_flags"
                             },
                             "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
-                              "symbol": "resolver_strict"
-                            },
-                            "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
-                              "symbol": "token_allowlist_enabled"
-                            },
-                            "val": {
-                              "bool": false
+                              "u32": 0
                             }
                           },
                           {
@@ -2080,11 +2012,7 @@
                     "symbol": "schema_version"
                   },
                   "val": {
-<<<<<<< HEAD
-                    "u32": 3
-=======
                     "u32": 4
->>>>>>> 639fb5fa5e64944dda83eb519a75bdd453120092
                   }
                 },
                 {

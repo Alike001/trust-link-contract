@@ -239,13 +239,13 @@ fn v1_config_keys_are_readable_before_migrate_and_folded_by_it() {
         assert_eq!(config.min_amount, 10);
         assert_eq!(config.max_amount, 5_000);
         assert_eq!(config.dispute_timeout, 86_400);
-        assert!(config.resolver_strict);
+        assert!(config.state_flags & crate::types::GLOBAL_CONFIG_FLAG_RESOLVER_STRICT != 0);
         // Settings that were never written keep their defaults.
         assert_eq!(
             config.ttl_extension_ledgers,
             crate::storage::default_global_config().ttl_extension_ledgers,
         );
-        assert!(!config.recovery_mode);
+        assert!(config.state_flags & crate::types::GLOBAL_CONFIG_FLAG_RECOVERY_MODE == 0);
 
         for key in [
             DataKey::FeeCollector,

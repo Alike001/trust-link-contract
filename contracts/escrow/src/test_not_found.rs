@@ -2,7 +2,7 @@
 
 use crate::test_helpers::setup_contract;
 use crate::ContractError;
-use soroban_sdk::{testutils::Address as _, Address, BytesN, Env, String as SorobanString, Symbol};
+use soroban_sdk::{testutils::Address as _, Address, BytesN, Env, Symbol};
 
 const MISSING_ID: u64 = 999_999;
 

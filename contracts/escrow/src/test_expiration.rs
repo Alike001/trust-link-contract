@@ -3,7 +3,7 @@
 use crate::{ContractError, Escrow, EscrowClient, EscrowState, ResolutionType};
 use soroban_sdk::{
     testutils::{Address as _, Ledger as _},
-    token, Address, BytesN, Env, String as SorobanString, Symbol,
+    token, Address, BytesN, Env, Symbol,
 };
 
 fn setup_env() -> (Env, Address, Address, Address, Address, Address, Address) {
@@ -233,7 +233,7 @@ fn test_reclaim_expired_grace_period_boundary() {
 
     let expires_at: u64 = 150;
     let grace_period: u64 = 0;
-    let reclaimable_at = expires_at; // 150
+    let _reclaimable_at = expires_at; // 150
 
     let id = client.create_escrow_with_expiration(
         &seller,
@@ -257,7 +257,6 @@ fn test_reclaim_expired_grace_period_boundary() {
         matches!(res, Err(Ok(ContractError::InvalidState))),
         "expected InvalidState at tick {}, got {:?}",
         expires_at - 1,
-        reclaimable_at - 1,
         res
     );
 

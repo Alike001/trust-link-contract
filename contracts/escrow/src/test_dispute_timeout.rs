@@ -9,7 +9,7 @@ use super::*;
 use soroban_sdk::{
     symbol_short,
     testutils::{Address as _, Ledger},
-    token, Address, BytesN, Env, String, Vec,
+    token, Address, BytesN, Env, Vec,
 };
 
 fn setup(

@@ -4,7 +4,7 @@
 
 use soroban_sdk::{
     testutils::{Address as _, MockAuth, MockAuthInvoke},
-    Address, BytesN, Env, IntoVal, String as SorobanString, Symbol,
+    Address, BytesN, Env, IntoVal, Symbol,
 };
 
 use crate::test_helpers::{create_funded_escrow, setup_contract};
@@ -209,7 +209,6 @@ fn test_mutual_cancel_rejected_when_disputed() {
         &buyer,
         &id,
         &Symbol::new(&env, "ITEM_NOT_RECEIVED"),
-        &SorobanString::from_str(&env, "Item never arrived"),
         &soroban_sdk::Bytes::from_slice(&env, b"Item never arrived"),
         &BytesN::from_array(&env, &[0xab; 32]),
     );

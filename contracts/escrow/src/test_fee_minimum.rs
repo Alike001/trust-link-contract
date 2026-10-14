@@ -3,7 +3,7 @@
 use crate::{Escrow, EscrowClient, Payee, ResolutionType};
 use soroban_sdk::{
     testutils::{Address as _, Ledger},
-    token, Address, Env, IntoVal, String as SorobanString, Symbol, Vec,
+    token, Address, Env, IntoVal, Symbol, Vec,
 };
 
 fn setup(env: &Env) -> (Address, Address, Address, Address, Address, Address) {

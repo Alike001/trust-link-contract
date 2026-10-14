@@ -123,8 +123,6 @@ pub enum ContractError {
     /// resolver has cast a vote; the resolver-inaction case is handled by
     /// `claim_dispute_timeout` instead.
     NoResolverVotes = 52,
-    /// Returned when a `multicall` batch exceeds `MAX_MULTICALL_BATCH_SIZE`.
-    MulticallBatchTooLarge = 60,
     /// Returned when the escrow ID counter overflows its maximum `u64` value.
     EscrowCounterOverflow = 53,
     /// Returned when checked arithmetic overflows specifically during fee calculation (e.g. basis-point math on fees).
@@ -139,6 +137,8 @@ pub enum ContractError {
     ProtocolFeeExceedsMax = 58,
     /// Returned when the arbitration fee exceeds its configured hard cap.
     ArbitrationFeeExceedsMax = 59,
+    /// Returned when a `multicall` batch exceeds `MAX_MULTICALL_BATCH_SIZE`.
+    MulticallBatchTooLarge = 60,
     /// Returned when a buyer-only operation is attempted by a caller that is
     /// not the escrow's buyer. Kept distinct from the generic
     /// [`ContractError::NotAuthorized`] so clients can tell a wrong-role call
@@ -178,13 +178,13 @@ pub enum ContractError {
     /// Returned when `resolved_at` is earlier than `disputed_at`, violating the timestamp ordering invariant.
     TimestampInvariantViolated = 74,
     /// Returned when `accept_fee_collector` is called but no pending fee collector is set.
-    NoPendingFeeCollector = 65,
+    NoPendingFeeCollector = 75,
     /// Returned when `set_max_appeals` is given a value outside the supported range.
-    InvalidMaxAppeals = 66,
+    InvalidMaxAppeals = 76,
     /// Returned when `set_max_basket_size` is given a value outside the supported range.
-    InvalidMaxBasketSize = 67,
+    InvalidMaxBasketSize = 77,
     /// Returned when `execute_upgrade` is called with an all-zero or otherwise trivially invalid WASM hash.
-    InvalidWasmHash = 68,
+    InvalidWasmHash = 78,
     /// Returned when `accept_treasury` is called but no pending treasury is set.
-    NoPendingTreasury = 69,
+    NoPendingTreasury = 79,
 }

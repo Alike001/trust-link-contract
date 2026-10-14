@@ -94,7 +94,7 @@ fn test_admin_cancel_pending_finalization_succeeds() {
     let id = create_and_fund(&env, &client, &seller, &buyer, &resolver, &token, amount);
 
     let reason = Symbol::new(&env, "ITEM_NOT_RECEIVED");
-    let desc = String::from_str(&env, "item not received");
+    let desc = soroban_sdk::Bytes::from_slice(&env, b"item not received");
     let evidence = BytesN::from_array(&env, &[0u8; 32]);
     client.raise_dispute(&buyer, &id, &reason, &desc, &evidence);
 
@@ -127,7 +127,7 @@ fn test_cancel_pending_finalization_rejects_non_admin() {
     let id = create_and_fund(&env, &client, &seller, &buyer, &resolver, &token, 1_000);
 
     let reason = Symbol::new(&env, "ITEM_NOT_RECEIVED");
-    let desc = String::from_str(&env, "item not received");
+    let desc = soroban_sdk::Bytes::from_slice(&env, b"item not received");
     let evidence = BytesN::from_array(&env, &[0u8; 32]);
     client.raise_dispute(&buyer, &id, &reason, &desc, &evidence);
     client.resolve_dispute(&resolver, &id, &ResolutionType::Refund);
@@ -148,7 +148,7 @@ fn test_cancel_pending_finalization_rejects_invalid_state() {
 
     // Calling while in Disputed state must fail
     let reason = Symbol::new(&env, "ITEM_NOT_RECEIVED");
-    let desc = String::from_str(&env, "item not received");
+    let desc = soroban_sdk::Bytes::from_slice(&env, b"item not received");
     let evidence = BytesN::from_array(&env, &[0u8; 32]);
     client.raise_dispute(&buyer, &id, &reason, &desc, &evidence);
 
@@ -162,7 +162,7 @@ fn test_admin_cancel_finalization_alias_works() {
     let id = create_and_fund(&env, &client, &seller, &buyer, &resolver, &token, 1_000);
 
     let reason = Symbol::new(&env, "ITEM_NOT_RECEIVED");
-    let desc = String::from_str(&env, "item not received");
+    let desc = soroban_sdk::Bytes::from_slice(&env, b"item not received");
     let evidence = BytesN::from_array(&env, &[0u8; 32]);
     client.raise_dispute(&buyer, &id, &reason, &desc, &evidence);
     client.resolve_dispute(&resolver, &id, &ResolutionType::Refund);
@@ -234,7 +234,7 @@ fn test_batch_create_escrow_rejects_duplicate_notes() {
         fee_bps: 0,
         resolver_fee_bps: 0,
         shipping_window: 3600,
-        notes: Some(String::from_str(&env, "TRACKING-001")),
+        notes: String::from_str(&env, "TRACKING-001"),
     };
     let input2 = EscrowInput {
         buyer: Some(buyer),
@@ -244,7 +244,7 @@ fn test_batch_create_escrow_rejects_duplicate_notes() {
         fee_bps: 0,
         resolver_fee_bps: 0,
         shipping_window: 3600,
-        notes: Some(String::from_str(&env, "TRACKING-001")), // Duplicate!
+        notes: String::from_str(&env, "TRACKING-001"), // Duplicate!
     };
     escrows.push_back(input1);
     escrows.push_back(input2);
@@ -266,7 +266,7 @@ fn test_batch_create_escrow_accepts_unique_or_empty_notes() {
         fee_bps: 0,
         resolver_fee_bps: 0,
         shipping_window: 3600,
-        notes: Some(String::from_str(&env, "TRACKING-001")),
+        notes: String::from_str(&env, "TRACKING-001"),
     };
     let input2 = EscrowInput {
         buyer: Some(buyer.clone()),
@@ -276,7 +276,7 @@ fn test_batch_create_escrow_accepts_unique_or_empty_notes() {
         fee_bps: 0,
         resolver_fee_bps: 0,
         shipping_window: 3600,
-        notes: Some(String::from_str(&env, "TRACKING-002")),
+        notes: String::from_str(&env, "TRACKING-002"),
     };
     let input3 = EscrowInput {
         buyer: Some(buyer),
@@ -286,7 +286,7 @@ fn test_batch_create_escrow_accepts_unique_or_empty_notes() {
         fee_bps: 0,
         resolver_fee_bps: 0,
         shipping_window: 3600,
-        notes: None,
+        notes: String::from_str(&env, ""),
     };
     escrows.push_back(input1);
     escrows.push_back(input2);
@@ -309,7 +309,7 @@ fn test_execute_resolution_transition_rejects_timestamp_before_disputed_at() {
     // Raise dispute at timestamp 1_700_000_100
     env.ledger().set_timestamp(1_700_000_100);
     let reason = Symbol::new(&env, "ITEM_NOT_RECEIVED");
-    let desc = String::from_str(&env, "item not received");
+    let desc = soroban_sdk::Bytes::from_slice(&env, b"item not received");
     let evidence = BytesN::from_array(&env, &[0u8; 32]);
     client.raise_dispute(&buyer, &id, &reason, &desc, &evidence);
 

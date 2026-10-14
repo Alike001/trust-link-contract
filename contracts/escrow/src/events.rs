@@ -1606,3 +1606,47 @@ pub fn emit_timelock_delay_updated(env: &Env, old_delay: u64, new_delay: u64, ca
         },
     );
 }
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct AppealFeeUpdated {
+    pub schema_version: u32,
+    pub old_fee_bps: u32,
+    pub new_fee_bps: u32,
+    pub timestamp: u64,
+}
+
+/// Topic: `(symbol_short!("AppealFee"), symbol_short!("Updated"),)`, data: `AppealFeeUpdated`.
+pub fn emit_appeal_fee_updated(env: &Env, old_fee_bps: u32, new_fee_bps: u32) {
+    env.events().publish(
+        (symbol_short!("AppealFee"), symbol_short!("Updated")),
+        AppealFeeUpdated {
+            schema_version: EVENT_SCHEMA_VERSION,
+            old_fee_bps,
+            new_fee_bps,
+            timestamp: env.ledger().timestamp(),
+        },
+    );
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct RecoveryModeUpdated {
+    pub schema_version: u32,
+    pub enabled: bool,
+    pub caller: Address,
+    pub timestamp: u64,
+}
+
+/// Topic: `(symbol_short!("Recovery"), symbol_short!("ModeUpd"),)`, data: `RecoveryModeUpdated`.
+pub fn emit_recovery_mode_updated(env: &Env, enabled: bool, caller: Address) {
+    env.events().publish(
+        (symbol_short!("Recovery"), symbol_short!("ModeUpd")),
+        RecoveryModeUpdated {
+            schema_version: EVENT_SCHEMA_VERSION,
+            enabled,
+            caller,
+            timestamp: env.ledger().timestamp(),
+        },
+    );
+}

@@ -534,32 +534,10 @@
               "val": {
                 "vec": [
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "1000000"
-                      }
-                    ]
+                    "u64": "1000000"
                   },
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Funded"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "1604799"
-                      }
-                    ]
+                    "u64": "72057594039532735"
                   }
                 ]
               }
@@ -759,14 +737,6 @@
                           },
                           {
                             "key": {
-                              "symbol": "paused"
-                            },
-                            "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
                               "symbol": "platform_fee_bps"
                             },
                             "val": {
@@ -783,26 +753,10 @@
                           },
                           {
                             "key": {
-                              "symbol": "recovery_mode"
+                              "symbol": "state_flags"
                             },
                             "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
-                              "symbol": "resolver_strict"
-                            },
-                            "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
-                              "symbol": "token_allowlist_enabled"
-                            },
-                            "val": {
-                              "bool": false
+                              "u32": 0
                             }
                           },
                           {

@@ -2,7 +2,7 @@
 
 use crate::test_helpers::{create_funded_escrow, setup_contract};
 use crate::{ContractError, EscrowClient, EscrowState, DISPUTE_REASONS};
-use soroban_sdk::{testutils::Address as _, Address, BytesN, Env, String as SorobanString, Symbol};
+use soroban_sdk::{testutils::Address as _, Address, BytesN, Env, Symbol};
 
 fn setup(env: &Env) -> (EscrowClient<'_>, Address, u64) {
     env.mock_all_auths();

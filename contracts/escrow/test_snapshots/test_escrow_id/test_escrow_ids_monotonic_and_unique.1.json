@@ -2958,18 +2958,7 @@
               "val": {
                 "vec": [
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "0"
                   }
                 ]
               }
@@ -3000,18 +2989,7 @@
               "val": {
                 "vec": [
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "0"
                   }
                 ]
               }
@@ -3042,18 +3020,7 @@
               "val": {
                 "vec": [
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "0"
                   }
                 ]
               }
@@ -3084,18 +3051,7 @@
               "val": {
                 "vec": [
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "0"
                   }
                 ]
               }
@@ -3126,18 +3082,7 @@
               "val": {
                 "vec": [
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "0"
                   }
                 ]
               }
@@ -3168,18 +3113,7 @@
               "val": {
                 "vec": [
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "0"
                   }
                 ]
               }
@@ -3210,18 +3144,7 @@
               "val": {
                 "vec": [
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "0"
                   }
                 ]
               }
@@ -3252,18 +3175,7 @@
               "val": {
                 "vec": [
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "0"
                   }
                 ]
               }
@@ -3294,18 +3206,7 @@
               "val": {
                 "vec": [
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "0"
                   }
                 ]
               }
@@ -3336,18 +3237,7 @@
               "val": {
                 "vec": [
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "0"
                   }
                 ]
               }
@@ -3378,18 +3268,7 @@
               "val": {
                 "vec": [
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "0"
                   }
                 ]
               }
@@ -3919,14 +3798,6 @@
                           },
                           {
                             "key": {
-                              "symbol": "paused"
-                            },
-                            "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
                               "symbol": "platform_fee_bps"
                             },
                             "val": {
@@ -3943,26 +3814,10 @@
                           },
                           {
                             "key": {
-                              "symbol": "recovery_mode"
+                              "symbol": "state_flags"
                             },
                             "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
-                              "symbol": "resolver_strict"
-                            },
-                            "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
-                              "symbol": "token_allowlist_enabled"
-                            },
-                            "val": {
-                              "bool": false
+                              "u32": 0
                             }
                           },
                           {
@@ -4106,11 +3961,7 @@
                     "symbol": "schema_version"
                   },
                   "val": {
-<<<<<<< HEAD
-                    "u32": 3
-=======
                     "u32": 4
->>>>>>> 639fb5fa5e64944dda83eb519a75bdd453120092
                   }
                 },
                 {

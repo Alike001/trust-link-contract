@@ -1440,32 +1440,10 @@
               "val": {
                 "vec": [
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "0"
                   },
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Funded"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "72057594037927936"
                   }
                 ]
               }
@@ -1496,88 +1474,22 @@
               "val": {
                 "vec": [
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Pending"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "0"
                   },
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Funded"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "72057594037927936"
                   },
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Shipped"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "144115188075855872"
                   },
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Disputed"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "288230376151711744"
                   },
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "PendingFinalization"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "0"
-                      }
-                    ]
+                    "u64": "576460752303423488"
                   },
                   {
-                    "vec": [
-                      {
-                        "vec": [
-                          {
-                            "symbol": "Refunded"
-                          }
-                        ]
-                      },
-                      {
-                        "u64": "86401"
-                      }
-                    ]
+                    "u64": "432345564227654017"
                   }
                 ]
               }
@@ -1930,14 +1842,6 @@
                           },
                           {
                             "key": {
-                              "symbol": "paused"
-                            },
-                            "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
                               "symbol": "platform_fee_bps"
                             },
                             "val": {
@@ -1954,26 +1858,10 @@
                           },
                           {
                             "key": {
-                              "symbol": "recovery_mode"
+                              "symbol": "state_flags"
                             },
                             "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
-                              "symbol": "resolver_strict"
-                            },
-                            "val": {
-                              "bool": false
-                            }
-                          },
-                          {
-                            "key": {
-                              "symbol": "token_allowlist_enabled"
-                            },
-                            "val": {
-                              "bool": false
+                              "u32": 0
                             }
                           },
                           {
@@ -2009,31 +1897,6 @@
                       "key": {
                         "vec": [
                           {
-                            "symbol": "TotalCreated"
-                          }
-                        ]
-                      },
-                      "val": {
-                        "u64": "2"
-                      }
-                    },
-                    {
-                      "key": {
-                        "vec": [
-                          {
-                            "symbol": "TotalDisputed"
-                          }
-                        ]
-                      },
-                      "val": {
-                        "u64": "1"
-                      }
-                    },
-                    {
-                      "key": {
-                        "vec": [
-                          {
-                            "symbol": "TotalRefunded"
                             "symbol": "TotalArbitrationFees"
                           },
                           {
@@ -2042,7 +1905,6 @@
                         ]
                       },
                       "val": {
-                        "u64": "1"
                         "i128": "0"
                       }
                     }

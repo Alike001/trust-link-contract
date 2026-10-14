@@ -82,6 +82,11 @@ export const enum ErrorCode {
   DuplicateNotes = 72,
   GracePeriodTooLong = 73,
   TimestampInvariantViolated = 74,
+  NoPendingFeeCollector = 75,
+  InvalidMaxAppeals = 76,
+  InvalidMaxBasketSize = 77,
+  InvalidWasmHash = 78,
+  NoPendingTreasury = 79,
 }
 
 /** Human-readable message for every contract error code. */
@@ -218,6 +223,16 @@ export const ERROR_MESSAGES: Readonly<Record<ErrorCode, string>> = {
     "The grace period exceeds the maximum allowed grace period.",
   [ErrorCode.TimestampInvariantViolated]:
     "Resolution timestamp cannot be earlier than dispute timestamp.",
+  [ErrorCode.NoPendingFeeCollector]:
+    "No pending fee collector is set for accept_fee_collector.",
+  [ErrorCode.InvalidMaxAppeals]:
+    "The max appeals value is outside the supported range.",
+  [ErrorCode.InvalidMaxBasketSize]:
+    "The max basket size value is outside the supported range.",
+  [ErrorCode.InvalidWasmHash]:
+    "The WASM hash is all-zero or otherwise invalid for upgrade.",
+  [ErrorCode.NoPendingTreasury]:
+    "No pending treasury is set for accept_treasury.",
 };
 
 /**

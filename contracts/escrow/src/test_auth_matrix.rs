@@ -16,7 +16,7 @@
 use crate::{ContractError, Escrow, EscrowClient, Payee, ResolutionType};
 use soroban_sdk::{
     testutils::{Address as _, Ledger as _},
-    token, Address, BytesN, Env, IntoVal, String as SorobanString, Symbol, Vec,
+    token, Address, BytesN, Env, IntoVal, Symbol, Vec,
 };
 
 // ─── harness ────────────────────────────────────────────────────────────────
@@ -28,7 +28,7 @@ struct Ctx<'e> {
     token: Address,
 }
 
-fn setup(env: &Env) -> Ctx {
+fn setup(env: &Env) -> Ctx<'_> {
     env.mock_all_auths();
     let admin = Address::generate(env);
     let fee_collector = Address::generate(env);
@@ -266,10 +266,12 @@ fn set_treasury_rejects_intruder() {
     let env = Env::default();
     let ctx = setup(&env);
     let intruder = Address::generate(&env);
-    let treasury = Address::generate(&env);
+    // 2-step treasury flow (`set_treasury` propose + `accept_treasury`): with
+    // no treasury configured, proposals fail with `NotInitialized` before any
+    // state change, so an intruder cannot install themselves as treasury.
     assert_eq!(
-        ctx.client.try_set_treasury(&intruder, &treasury),
-        Err(Ok(ContractError::NotAuthorized))
+        ctx.client.try_set_treasury(&intruder),
+        Err(Ok(ContractError::NotInitialized))
     );
 }
 

@@ -10,15 +10,14 @@
 use crate::internal::*;
 use crate::storage;
 use crate::{
-    emit_fee_collector_accepted, emit_fee_collector_pending, emit_max_appeals_updated,
-    emit_max_basket_size_updated, emit_timelock_cancelled, emit_timelock_executed,
-    emit_timelock_queued, ContractError, Escrow, EscrowState, TimelockOperation, TimelockProposal,
-    *,
+    emit_appeal_fee_updated, emit_fee_collector_accepted, emit_fee_collector_pending,
+    emit_max_appeals_updated, emit_max_basket_size_updated, emit_recovery_mode_updated,
+    emit_recovery_withdraw, emit_timelock_cancelled, emit_timelock_executed, emit_timelock_queued,
+    ContractError, Escrow, EscrowState, TimelockOperation, TimelockProposal, *,
 };
 use soroban_sdk::{
     contractimpl, xdr::ToXdr, Address, BytesN, Env, IntoVal, Symbol, TryFromVal, Val, Vec,
 };
-use soroban_sdk::{contractimpl, xdr::ToXdr, Address, BytesN, Env, IntoVal, Symbol, Val, Vec};
 
 pub const ADMIN_TIMELOCK_DELAY_SECONDS: u64 = 24 * 60 * 60;
 pub const MIN_TIMELOCK_DELAY_SECONDS: u64 = 12 * 60 * 60; // 12 hours
@@ -53,7 +52,7 @@ fn queue_timelock_op(
     let proposal = TimelockProposal {
         operation,
         proposer: caller.clone(),
-        params_hash: params_hash.into(),
+        params_hash,
         queued_at: now,
         ready_at,
     };
@@ -443,10 +442,8 @@ impl Escrow {
             return Err(ContractError::NotAuthorized);
         }
 
-        let old_collector: Address = env
-            .storage()
-            .instance()
-            .get(&DataKey::FeeCollector)
+        let old_collector: Address = crate::storage::read_global_config(&env)
+            .fee_collector
             .ok_or(ContractError::NotAuthorized)?;
 
         env.storage()
@@ -455,9 +452,9 @@ impl Escrow {
         env.storage()
             .instance()
             .remove(&DataKey::PendingFeeCollector);
-        emit_fee_collector_accepted(&env, old_collector, pending);
-        storage::update_global_config(&env, |c| c.fee_collector = Some(new_collector.clone()));
-        emit_fee_collector_updated(&env, old_collector, new_collector);
+        emit_fee_collector_accepted(&env, old_collector.clone(), pending.clone());
+        storage::update_global_config(&env, |c| c.fee_collector = Some(pending.clone()));
+        emit_fee_collector_updated(&env, old_collector, pending);
         Ok(())
     }
 
@@ -1235,8 +1232,16 @@ impl Escrow {
         let _proposal =
             execute_timelock_op(&env, &caller, TimelockOperation::SetResolverStrict, params)?;
 
-        let old_strict = storage::read_global_config(&env).resolver_strict;
-        storage::update_global_config(&env, |c| c.resolver_strict = strict);
+        let old_strict = storage::read_global_config(&env).state_flags
+            & crate::types::GLOBAL_CONFIG_FLAG_RESOLVER_STRICT
+            != 0;
+        storage::update_global_config(&env, |c| {
+            if strict {
+                c.state_flags |= crate::types::GLOBAL_CONFIG_FLAG_RESOLVER_STRICT;
+            } else {
+                c.state_flags &= !crate::types::GLOBAL_CONFIG_FLAG_RESOLVER_STRICT;
+            }
+        });
         emit_resolver_strict_updated(&env, old_strict, strict, caller);
         Ok(())
     }
@@ -1433,21 +1438,25 @@ impl Escrow {
     ) -> Result<(), ContractError> {
         let mut params = Vec::new(&env);
         params.push_back(max_appeals.into_val(&env));
-        queue_timelock_op(&env, &caller, TimelockOperation::SetMaxAppeals, params)
+        queue_timelock_op(
+            &env,
+            &caller,
+            TimelockOperation::SetMaxAppeals as u32,
+            params,
+        )
     }
 
-    pub fn execute_set_max_appeals(env: Env, caller: Address) -> Result<(), ContractError> {
-        let proposal = execute_timelock_op(&env, &caller, TimelockOperation::SetMaxAppeals)?;
-        let max_appeals = u32::try_from_val(
-            &env,
-            &proposal
-                .params
-                .get(0)
-                .ok_or(ContractError::IndexOutOfBounds)?,
-        )
-        .map_err(|_| ContractError::IndexOutOfBounds)?;
+    pub fn execute_set_max_appeals(
+        env: Env,
+        caller: Address,
+        max_appeals: u32,
+    ) -> Result<(), ContractError> {
+        let mut params = Vec::new(&env);
+        params.push_back(max_appeals.into_val(&env));
+        let _proposal =
+            execute_timelock_op(&env, &caller, TimelockOperation::SetMaxAppeals, params)?;
 
-        if max_appeals < crate::MIN_MAX_APPEALS || max_appeals > crate::MAX_MAX_APPEALS {
+        if !(crate::MIN_MAX_APPEALS..=crate::MAX_MAX_APPEALS).contains(&max_appeals) {
             return Err(ContractError::InvalidMaxAppeals);
         }
         let old_max = crate::read_max_appeals(&env);
@@ -1471,22 +1480,25 @@ impl Escrow {
     ) -> Result<(), ContractError> {
         let mut params = Vec::new(&env);
         params.push_back(max_basket_size.into_val(&env));
-        queue_timelock_op(&env, &caller, TimelockOperation::SetMaxBasketSize, params)
+        queue_timelock_op(
+            &env,
+            &caller,
+            TimelockOperation::SetMaxBasketSize as u32,
+            params,
+        )
     }
 
-    pub fn execute_set_max_basket_size(env: Env, caller: Address) -> Result<(), ContractError> {
-        let proposal = execute_timelock_op(&env, &caller, TimelockOperation::SetMaxBasketSize)?;
-        let max_basket_size = u32::try_from_val(
-            &env,
-            &proposal
-                .params
-                .get(0)
-                .ok_or(ContractError::IndexOutOfBounds)?,
-        )
-        .map_err(|_| ContractError::IndexOutOfBounds)?;
+    pub fn execute_set_max_basket_size(
+        env: Env,
+        caller: Address,
+        max_basket_size: u32,
+    ) -> Result<(), ContractError> {
+        let mut params = Vec::new(&env);
+        params.push_back(max_basket_size.into_val(&env));
+        let _proposal =
+            execute_timelock_op(&env, &caller, TimelockOperation::SetMaxBasketSize, params)?;
 
-        if max_basket_size < crate::MIN_MAX_BASKET_SIZE || max_basket_size > crate::MAX_BASKET_SIZE
-        {
+        if !(crate::MIN_MAX_BASKET_SIZE..=crate::MAX_BASKET_SIZE).contains(&max_basket_size) {
             return Err(ContractError::InvalidMaxBasketSize);
         }
         let old_max = crate::read_max_basket_size(&env);
@@ -1900,15 +1912,10 @@ impl Escrow {
         Ok(())
     }
 
-    pub fn set_treasury(env: Env, caller: Address, treasury: Address) -> Result<(), ContractError> {
-        let admin = require_admin(&env)?;
-        caller.require_auth();
-        if caller != admin {
-            return Err(ContractError::NotAuthorized);
-        }
-        storage::update_global_config(&env, |c| c.treasury = Some(treasury.clone()));
-        Ok(())
-    }
+    // NOTE: the legacy immediate 3-arg `set_treasury(env, caller, treasury)`
+    // was removed here — it duplicated the `set_treasury` name and bypassed
+    // the 2-step propose/accept flow (`set_treasury` + `accept_treasury`).
+    // GlobalConfig.treasury currently has no writer; see Phase 5b.
 
     // 19. SetTimelockDelay
     pub fn queue_set_timelock_delay(

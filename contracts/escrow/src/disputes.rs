@@ -187,6 +187,7 @@ impl Escrow {
     /// treasury (if configured) and the remainder — minus the protocol fee —
     /// to the winning party, then transitions the escrow to `Completed`
     /// (release) or `Refunded` (refund). Emits `dispute_resolved`.
+    #[allow(clippy::too_many_lines)]
     pub fn finalize_dispute(
         env: Env,
         caller: Address,
@@ -237,23 +238,10 @@ impl Escrow {
             .fee_collector
             .ok_or(ContractError::NotInitialized)?;
 
-        let arbitration_fee = dispute_data.arbitration_fee;
-        if arbitration_fee > 0 {
-            let total_key = DataKey::TotalArbitrationFees(escrow.token.clone());
-            let current_total: i128 = env.storage().instance().get(&total_key).unwrap_or(0);
-            env.storage().instance().set(
-                &total_key,
-                &current_total
-                    .checked_add(arbitration_fee)
-                    .ok_or(ContractError::ArithmeticError)?,
-            );
-            token::Client::new(&env, &escrow.token).transfer(
-                &env.current_contract_address(),
-                &fee_collector,
-                &arbitration_fee,
-            );
-        }
-
+        // Arbitration and resolver fees are settled exactly once in
+        // `execute_resolution_transition` at resolve time (guarded by
+        // `fees_charged`), so they must NOT be paid again here — only the
+        // platform and protocol fees settle at finalization.
         let platform_fee_bps = read_platform_fee_bps(&env);
 
         // ── FEE BASIS (original funded principal) ──
@@ -417,10 +405,12 @@ impl Escrow {
         };
 
         let prev_state = escrow.state.clone();
-        escrow.amount = escrow
-            .amount
-            .checked_add(dispute_data.arbitration_fee)
-            .ok_or(ContractError::ArithmeticError)?;
+        // NOTE: arbitration/resolver fees settled at resolve time are NOT
+        // restored here. They were already transferred out by
+        // `execute_resolution_transition` (guarded by `fees_charged`), so
+        // adding them back would create unbacked funds: `escrow.amount` must
+        // always equal what the contract actually custodies. The second
+        // resolution round reuses the recorded fees without charging again.
         escrow.state = EscrowState::Disputed;
 
         let mut updated_dispute = dispute_data;

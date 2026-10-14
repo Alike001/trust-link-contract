@@ -17,7 +17,7 @@
 //! own — is what `duplicate_vote_does_not_double_count` pins down.
 
 use crate::{ContractError, Escrow, EscrowClient, EscrowState, ResolutionType};
-use soroban_sdk::{testutils::Address as _, token, Address, BytesN, Env, String, Symbol, Vec};
+use soroban_sdk::{testutils::Address as _, token, Address, BytesN, Env, Symbol, Vec};
 
 const AMOUNT: i128 = 1_000;
 

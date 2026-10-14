@@ -3,7 +3,7 @@
 use crate::{ContractError, Escrow, EscrowClient, EscrowState, Payee};
 use soroban_sdk::{
     testutils::{Address as _, Events as _, Ledger as _},
-    token, Address, BytesN, Env, IntoVal, String as SorobanString, Symbol, TryFromVal, Val, Vec,
+    token, Address, BytesN, Env, IntoVal, Symbol, TryFromVal, Val, Vec,
 };
 
 #[allow(dead_code)]

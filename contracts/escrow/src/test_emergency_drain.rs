@@ -6,7 +6,16 @@ use soroban_sdk::{
     token, Address, Env, IntoVal, Vec,
 };
 
-fn setup(env: &Env) -> (EscrowClient, Address, Address, Address, Address, Address) {
+fn setup(
+    env: &Env,
+) -> (
+    EscrowClient<'_>,
+    Address,
+    Address,
+    Address,
+    Address,
+    Address,
+) {
     env.mock_all_auths();
     let admin = Address::generate(env);
     let fee_collector = Address::generate(env);

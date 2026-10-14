@@ -4,9 +4,7 @@
 
 use crate::test_helpers::{create_funded_escrow, setup_contract};
 use crate::{Payee, ResolutionType};
-use soroban_sdk::{
-    testutils::Address as _, token, Address, BytesN, Env, IntoVal, String, Symbol, Vec,
-};
+use soroban_sdk::{testutils::Address as _, Address, BytesN, Env, IntoVal, Symbol, Vec};
 
 fn register_token(env: &Env) -> Address {
     let token_admin = Address::generate(env);
