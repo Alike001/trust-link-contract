@@ -47,7 +47,7 @@ fn new_admin_can_call_admin_functions_after_rotation() {
     use crate::DataKey;
     let fee_config: crate::FeeConfig = env
         .as_contract(&client.address, || {
-            env.storage().instance().get(&DataKey::FeeConfig)
+            Some(crate::storage::read_fee_config(&env))
         })
         .expect("fee config set");
     assert_eq!(fee_config.protocol_fee_bps, 50);
@@ -70,7 +70,6 @@ fn old_admin_cannot_authorise_admin_functions_after_rotation() {
 
 #[test]
 #[should_panic]
-#[ignore]
 fn rotation_requires_current_admin_authorisation() {
     let (env, client, _admin) = setup();
     let new_admin = Address::generate(&env);

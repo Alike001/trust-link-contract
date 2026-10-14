@@ -29,9 +29,8 @@ pub const VALID_SHIPPING_WINDOW: u64 = 86_400;
 
 /// Reason symbols accepted by `raise_dispute`. `Symbol::new` panics on
 /// characters outside the Soroban symbol alphabet, so the reason is selected
-/// from this fixed set rather than built from raw fuzz bytes.
-pub const DISPUTE_REASONS: [&str; 4] =
-    ["ITEM_NOT_RECEIVED", "NOT_AS_DESCRIBED", "DAMAGED", "OTHER"];
+/// from the contract's fixed set rather than built from raw fuzz bytes.
+pub use trustlink_escrow::DISPUTE_REASONS;
 
 pub struct Harness {
     pub env: Env,
@@ -240,8 +239,11 @@ impl<'d> Reader<'d> {
         buf
     }
 
+    /// A uniformly distributed boolean: the low bit of a fuzzed byte. `u8` is
+    /// drawn uniformly from the input (zero-padded past the end), so `% 2 == 0`
+    /// yields an exact 50/50 split across both branches.
     pub fn bool(&mut self) -> bool {
-        self.u8().is_multiple_of(2)
+        self.u8() % 2 == 0
     }
 
     /// A ledger timestamp bounded to 63 bits. Full-width `u64::MAX` timestamps
@@ -255,6 +257,18 @@ impl<'d> Reader<'d> {
     /// documented cap and everything in between.
     pub fn len(&mut self, max: usize) -> usize {
         (self.u8() as usize) % (max + 1)
+    }
+
+    /// Roughly half the time returns `real_id` (the escrow the target already
+    /// set up); the rest of the time returns an arbitrary fuzzed id. Nearly
+    /// every target uses this to choose between exercising the real escrow
+    /// and probing the not-found / wrong-id path.
+    pub fn target_id(&mut self, real_id: u64) -> u64 {
+        if self.bool() {
+            real_id
+        } else {
+            self.u64()
+        }
     }
 
     /// An ASCII string of up to `max` characters, exercising the contract's
