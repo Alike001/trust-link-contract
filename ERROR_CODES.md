@@ -58,7 +58,30 @@ This document provides a comprehensive reference of all `ContractError` variants
 | **50** | `DisputeNotDeadlocked` | `resolve_deadlocked_dispute` was called before `DISPUTE_DEADLOCK_WINDOW` elapsed, or the recorded votes actually meet the resolver threshold. | Wait for the deadlock window; if the threshold is already met the escrow is in `PendingFinalization`, so finalize instead. |
 | **51** | `InvalidDisputeTimeout` | `set_dispute_timeout` was given a value outside `MIN_DISPUTE_TIMEOUT..=MAX_DISPUTE_TIMEOUT`. | Supply a timeout between 1 hour and 365 days. |
 | **52** | `NoResolverVotes` | `resolve_deadlocked_dispute` was called while no resolver had cast a vote. | The resolver-inaction case is handled by `claim_dispute_timeout`; wait for that window instead. |
+| **53** | `EscrowCounterOverflow` | The escrow ID counter overflowed its maximum `u64` value. | This is an internal error; contact the contract maintainer. |
+| **54** | `FeeCalculationOverflow` | Checked arithmetic overflowed during fee basis-point math. | Use smaller amounts or lower fee rates; contact the maintainer if persistent. |
+| **55** | `AmountCalculationOverflow` | Checked arithmetic overflowed during net payout math. | Use smaller amounts; contact the maintainer if persistent. |
+| **56** | `PayeeIndexOutOfBounds` | A payee list index is out of bounds, indicating a payee storage or argument invariant violation. | This is an internal error; contact the contract maintainer. |
+| **57** | `BasketIndexOutOfBounds` | A basket token list index is out of bounds, indicating a basket-token storage or argument invariant violation. | This is an internal error; contact the contract maintainer. |
+| **58** | `ProtocolFeeExceedsMax` | The global protocol fee exceeds its configured hard cap. | Configure a protocol fee within the allowed limits. |
+| **59** | `ArbitrationFeeExceedsMax` | The arbitration fee exceeds its configured hard cap. | Configure an arbitration fee within the allowed limits. |
+| **60** | `MulticallBatchTooLarge` | A `multicall` batch exceeds `MAX_MULTICALL_BATCH_SIZE`. | Split the batch into smaller calls within the allowed size. |
+| **61** | `NotAuthorizedBuyer` | A buyer-only operation was attempted by a caller that is not the escrow's buyer. | Call from the escrow's assigned buyer account. |
+| **62** | `NotAuthorizedSeller` | A seller-only operation (e.g. `mark_shipped`) was attempted by a caller that is not the escrow's primary payee. | Call from the escrow's primary payee (seller) account. |
+| **63** | `EscrowAlreadyCompleted` | An action was attempted on an escrow that has already reached the terminal `Completed` state. | No action required; the escrow lifecycle is finished. |
+| **64** | `EscrowAlreadyRefunded` | An action was attempted on an escrow that has already reached the terminal `Refunded` state. | No action required; the escrow lifecycle is finished. |
 | **65** | `AppealFeeExceedsMax` | `set_appeal_fee` (or its timelocked execute step) was given a fee above `MAX_APPEAL_FEE_BPS` (5%). | Supply an appeal fee within `MIN_APPEAL_FEE_BPS..=MAX_APPEAL_FEE_BPS`, or `0` to disable the fee. |
 | **66** | `AppealFeeBelowMinimum` | `set_appeal_fee` (or its timelocked execute step) was given a non-zero fee below `MIN_APPEAL_FEE_BPS` (0.1%). | Raise the fee to at least the minimum so appeals always cost griefers meaningfully, or use `0` to disable it. |
 | **67** | `NotInRecoveryMode` | `recovery_withdraw` was called while recovery mode is not enabled. | The admin must call `enable_recovery_mode` first; use the standard state machine otherwise. |
 | **68** | `InvalidDisputeReason` | `raise_dispute` was given a `reason` symbol that is not one of the predefined dispute reasons. | Use one of `ITEM_NOT_RECEIVED`, `NOT_AS_DESCRIBED`, `DAMAGED`, `DEFECTIVE`, `FRAUD`, `OTHER`. |
+| **69** | `InvalidOperation` | An arbitrary u32 operation ID does not map to a valid `TimelockOperation`. | Supply a valid timelock operation ID. |
+| **70** | `InvalidTimelockDelay` | A timelock delay was set outside the allowed bounds (`MIN_TIMELOCK_DELAY_SECONDS..=MAX_TIMELOCK_DELAY_SECONDS`). | Supply a delay between 12 hours and 30 days. |
+| **71** | `InvalidProposalHash` | The executed parameters do not match the queued proposal hash. | Re-execute with the exact parameters that were queued. |
+| **72** | `DuplicateNotes` | A `batch_create_escrow` call contains duplicate notes values. | Ensure every entry in the batch carries a distinct notes value. |
+| **73** | `GracePeriodTooLong` | `create_escrow_with_expiration` was called with a `grace_period` that exceeds `MAX_GRACE_PERIOD`. | Supply a grace period within the allowed maximum. |
+| **74** | `TimestampInvariantViolated` | `resolved_at` is earlier than `disputed_at`, violating the timestamp ordering invariant. | This indicates ledger timestamp regression; retry at a later timestamp. |
+| **75** | `NoPendingFeeCollector` | `accept_fee_collector` was called but no pending fee collector is set. | The admin must call `set_fee_collector` first to register a pending collector. |
+| **76** | `InvalidMaxAppeals` | `set_max_appeals` was given a value outside the supported range. | Supply a max appeals value within `MIN_MAX_APPEALS..=MAX_MAX_APPEALS`. |
+| **77** | `InvalidMaxBasketSize` | `set_max_basket_size` was given a value outside the supported range. | Supply a max basket size within `MIN_MAX_BASKET_SIZE..=MAX_BASKET_SIZE`. |
+| **78** | `InvalidWasmHash` | `execute_upgrade` was called with an all-zero or otherwise invalid WASM hash. | Supply the valid WASM hash of the new contract build. |
+| **79** | `NoPendingTreasury` | `accept_treasury` was called but no pending treasury is set. | The admin must call `set_treasury` first to register a pending treasury. |

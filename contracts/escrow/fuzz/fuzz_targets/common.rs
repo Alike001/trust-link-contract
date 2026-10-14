@@ -12,8 +12,8 @@
 #![allow(dead_code)]
 
 use soroban_sdk::{
-    testutils::Address as _, token, Address, BytesN, Env, IntoVal, String as SorobanString, Symbol,
-    Val, Vec,
+    testutils::Address as _, token, Address, Bytes, BytesN, Env, IntoVal, String as SorobanString,
+    Symbol, Val, Vec,
 };
 use trustlink_escrow::{Escrow, EscrowClient, Payee};
 
@@ -167,7 +167,7 @@ impl Harness {
     pub fn create_disputed_escrow(&self, r: &mut Reader) -> Option<u64> {
         let id = self.create_funded_escrow()?;
         let reason = self.dispute_reason(r);
-        let description = r.ascii_string(&self.env, 64);
+        let description = r.bytes(&self.env, 64);
         let evidence_hash = BytesN::from_array(&self.env, &r.bytes32());
         self.client
             .try_raise_dispute(&self.buyer, &id, &reason, &description, &evidence_hash)
@@ -280,5 +280,17 @@ impl<'d> Reader<'d> {
             buf.push(char::from(b'a' + (self.u8() % 26)));
         }
         SorobanString::from_str(env, &buf)
+    }
+
+    /// Arbitrary raw bytes up to `max` long, for `Bytes` parameters such as
+    /// dispute descriptions, which skip UTF-8 validation by design. Mirrors
+    /// `ascii_string`'s length distribution (empty through over-long).
+    pub fn bytes(&mut self, env: &Env, max: usize) -> Bytes {
+        let len = (self.u8() as usize) % (max + 1);
+        let mut buf = std::vec::Vec::with_capacity(len);
+        for _ in 0..len {
+            buf.push(self.u8());
+        }
+        Bytes::from_slice(env, &buf)
     }
 }
