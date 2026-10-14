@@ -29,8 +29,6 @@
         }
       ]
     ],
-    [],
-    [],
     []
   ],
   "ledger": {
@@ -137,7 +135,7 @@
                               "symbol": "protocol_fee_bps"
                             },
                             "val": {
-                              "u32": 500
+                              "u32": 0
                             }
                           }
                         ]
@@ -153,6 +151,18 @@
                       },
                       "val": {
                         "bool": false
+                      }
+                    },
+                    {
+                      "key": {
+                        "vec": [
+                          {
+                            "symbol": "PlatformFeeBps"
+                          }
+                        ]
+                      },
+                      "val": {
+                        "u32": 500
                       }
                     },
                     {
