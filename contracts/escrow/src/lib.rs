@@ -78,8 +78,11 @@ const MAX_ARBITRATION_FEE_BPS: u32 = 500;
 /// Maximum protocol fee in basis points (500 = 5%).
 ///
 /// `set_fee` and `set_protocol_fee` reject any value above this with
-/// `FeeExceedsMax`, and it feeds the combined fee cap together with the
-/// arbitration fee.
+/// `ProtocolFeeExceedsMax`, and also enforce the combined cap
+/// (`MAX_COMBINED_FEE_BPS`) together with the arbitration fee.
+///
+/// This constant and both setters are cfg-gated to `test` / `testutils`
+/// builds and never ship in the production contract.
 #[cfg(any(test, feature = "testutils"))]
 const MAX_PROTOCOL_FEE_BPS: u32 = 500;
 
@@ -237,6 +240,18 @@ pub const DEFAULT_SHIPPING_WINDOW: u64 = 3600;
 /// Maximum number of messages returned per page by `get_messages`, regardless
 /// of the caller-supplied `limit`.
 pub const MAX_MESSAGES_PER_PAGE: u64 = 50;
+
+/// Maximum number of ids `get_escrows_by_ids` will look up in one call.
+///
+/// Independent of [`MAX_MESSAGES_PER_PAGE`]: id-batch size and message paging
+/// are unrelated concerns and can be tuned separately. Extra ids beyond the cap
+/// are silently **truncated** (the call never errors), so callers must send at
+/// most this many ids per request.
+pub const MAX_IDS_PER_QUERY: u32 = 50;
+
+/// Maximum number of escrow ids returned per page by `get_escrows_by_vendor`
+/// and `get_escrows_by_seller`, regardless of the caller-supplied `limit`.
+pub const MAX_ESCROWS_PER_PAGE: u64 = 50;
 
 /// Maximum escrow amount intentionally capped to
 /// preserve arithmetic safety for fee calculations

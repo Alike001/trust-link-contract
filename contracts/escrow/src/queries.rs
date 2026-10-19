@@ -66,8 +66,15 @@ impl Escrow {
     }
 
     /// Returns the full state transition history for an escrow as
-    /// `(state, ledger_timestamp)` pairs, oldest first. Returns
-    /// `EscrowNotFound` if the escrow does not exist.
+    /// `(state, ledger_timestamp)` pairs, oldest first.
+    ///
+    /// Outcomes:
+    /// - missing escrow => `EscrowNotFound` (never an empty `Vec`);
+    /// - existing escrow => a **non-empty** `Vec`, because creation records a
+    ///   `Pending` entry via `append_state_history`, so a freshly created
+    ///   escrow always starts with `Pending`. Once an escrow has accumulated
+    ///   more than `MAX_STATE_HISTORY_ENTRIES` transitions the oldest entries
+    ///   are pruned, so `Pending` is only guaranteed first until that cap.
     pub fn get_state_history(
         env: Env,
         escrow_id: u64,
@@ -134,19 +141,18 @@ impl Escrow {
     }
 
     /// Batch view: return escrows for the supplied IDs in the same order.
-    /// Missing IDs return None in the corresponding slot. Input is capped at
-    /// `MAX_MESSAGES_PER_PAGE` (50 IDs) to prevent resource exhaustion.
+    ///
+    /// - A missing ID yields `None` in its slot, so the result is positionally
+    ///   aligned with the (possibly truncated) input.
+    /// - Input is capped at `MAX_IDS_PER_QUERY` (50). IDs beyond the cap are
+    ///   **truncated**, not rejected: only the first `MAX_IDS_PER_QUERY` are
+    ///   looked up and the result has at most that many slots.
     pub fn get_escrows_by_ids(
         env: Env,
         ids: soroban_sdk::Vec<u64>,
     ) -> soroban_sdk::Vec<Option<EscrowData>> {
         let mut result: soroban_sdk::Vec<Option<EscrowData>> = soroban_sdk::Vec::new(&env);
-        let max_ids = u32::try_from(crate::MAX_MESSAGES_PER_PAGE).unwrap_or(u32::MAX);
-        let limit = if ids.len() > max_ids {
-            max_ids
-        } else {
-            ids.len()
-        };
+        let limit = ids.len().min(crate::MAX_IDS_PER_QUERY);
 
         for i in 0..limit {
             let Some(id) = ids.get(i) else {
@@ -166,14 +172,34 @@ impl Escrow {
         read_fee_config(&env)
     }
 
-    /// Retrieves all escrow IDs associated with a specific vendor (seller).
-    pub fn get_escrows_by_vendor(env: Env, vendor: Address) -> Vec<u64> {
-        storage::read_vendor_escrow_index(&env, &vendor)
+    /// Retrieves a page of escrow IDs associated with a specific vendor
+    /// (seller).
+    ///
+    /// Ordering is **ascending** (oldest escrow first, i.e. creation order).
+    /// `start` is a zero-based offset into that list and `limit` is clamped to
+    /// `MAX_ESCROWS_PER_PAGE` (50). An out-of-range `start` or a zero `limit`
+    /// returns an empty `Vec`. To walk a full index, call repeatedly with
+    /// `start += returned.len()` until an empty page comes back.
+    pub fn get_escrows_by_vendor(env: Env, vendor: Address, start: u64, limit: u64) -> Vec<u64> {
+        storage::read_vendor_escrow_index_page(
+            &env,
+            &vendor,
+            start,
+            limit.min(crate::MAX_ESCROWS_PER_PAGE),
+        )
     }
 
-    /// Retrieves all escrow IDs associated with a specific seller.
-    pub fn get_escrows_by_seller(env: Env, seller: Address) -> Vec<u64> {
-        storage::read_vendor_escrow_index(&env, &seller)
+    /// Retrieves a page of escrow IDs associated with a specific seller.
+    ///
+    /// Alias of [`Self::get_escrows_by_vendor`]: same ascending (creation)
+    /// order, same `(start, limit)` semantics, same `MAX_ESCROWS_PER_PAGE` cap.
+    pub fn get_escrows_by_seller(env: Env, seller: Address, start: u64, limit: u64) -> Vec<u64> {
+        storage::read_vendor_escrow_index_page(
+            &env,
+            &seller,
+            start,
+            limit.min(crate::MAX_ESCROWS_PER_PAGE),
+        )
     }
 
     /// Returns on-chain counters for escrow lifecycle events.
