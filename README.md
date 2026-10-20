@@ -70,7 +70,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for the complete state machine with guard
 
 | Function | Auth | Description |
 |---|---|---|
-| `create_escrow(seller_or_payees, buyer, resolver, token, amount, fee_bps, resolver_fee_bps, shipping_window, notes)` | seller (first payee) | Creates escrow, assigns sequential `u32` ID. `seller_or_payees` is an `Address` or a `Vec<Payee>`. Buyer is optional — unset means anyone may fund it. |
+| `create_escrow(seller_or_payees, buyer, resolver, token, amount, fee_bps, resolver_fee_bps, shipping_window, notes)` | seller/payees | Creates escrow with optional buyer and notes. |
 | `fund_escrow(escrow_id, buyer)` | buyer | Transfers `amount` tokens from buyer to contract, sets `funded_at`. |
 | `mark_shipped(escrow_id)` | seller | Sets state to `Shipped`, starts delivery clock at `shipped_at`. |
 | `confirm_delivery(escrow_id)` | buyer | Transfers tokens from contract to seller, state ? `Completed`. |
